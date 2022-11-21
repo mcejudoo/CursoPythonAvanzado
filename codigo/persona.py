@@ -51,13 +51,23 @@ class Guia(Persona):
             else:
                 raise ValueError('No coinciden en un idioma')
 
+class Empleado(Persona):
+    pass
+
+class Profesor(Persona):
+    pass
 
 if __name__ == '__main__':
     g1 = Guia('Sara',34,1.7,'N',['ingles','frances'])    
-    g2 = Guia('Pedro',37,1.67,'L',['italiano','aleman'])    
+    g2 = Guia('Pedro',37,1.67,'L',['italiano','frances'])    
     g1.hablar(g2)
     print(g1)
     g1.cumple()
     print(g1)
-
+    print('g1 isinstance Persona:', isinstance(g1, Persona))
+    print('g1 isinstance Guia:', isinstance(g1, Guia))
+    print(issubclass(Guia, Persona))
+    print(issubclass(g1.__class__, Persona))
+    L = [c.__name__ for c in Persona.__subclasses__()]
+    print(L)
 

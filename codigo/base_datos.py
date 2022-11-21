@@ -152,11 +152,30 @@ class Almacen:
 
     def __init__(self, productos):
         self.productos=productos
+        self.inicio = 0
+
+    def __bool__(self):
+        return len(self.productos)!=0
+
+    def __iter__(self):
+        return self
 
     def __len__(self):
         return len(self.productos)
 
+    def __next__(self):
+        if self.inicio == len(self.productos)-1:
+            self.inicio = 0
+            raise StopIteration
+
+        self.inicio = self.inicio+1
+        return self.productos[self.inicio]
+
+    def __call__(self):
+        print(self.productos)
+
 def testAlmacen():
+    """Ejemplo de una colección"""
     try:
         bd = BaseDatos(path)       
         L = bd.select('bebidas')
@@ -165,6 +184,14 @@ def testAlmacen():
 
         for i in almacen:
             print(i)
+
+        print(bool(almacen))
+        almacen2 = Almacen([])
+        print(bool(almacen2))
+        if almacen:
+            print('El almacen tiene productos')
+        almacen()
+
             
     except Exception as e:
         print(e.__class__.__name__, e) 
