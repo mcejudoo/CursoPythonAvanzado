@@ -43,6 +43,12 @@ class Producto:
 
     def __repr__(self):
         return str(self)
+
+    def getTupla(self):
+        return (self.id,self.nombre,self.cat.id,self.precio,self.exis)
+        
+    def getTupla2(self):
+        return (self.nombre,self.cat.id,self.precio,self.exis,self.id)
     
 class BaseDatos:
     """
@@ -82,6 +88,27 @@ class BaseDatos:
             raise e
         finally:
             if cur: cur.close()
+
+    def __ejecutar(self, sql, t):
+        cur = None
+        try:
+            cur.execute(sql,t)
+        except Exception as e:
+            raise e
+        finally:
+            if cur: cur.close()
+
+    def create(self, p):
+        sql = "insert into productos(id, nombre, idcategoria, importe, existencias) values(?,?,?,?,?)"
+        self.__ejecutar(sql, p.getTupla())
+
+    def delete(self, id):
+        sql = "delete from productos where id=?"
+        self.__ejecutar(sql, (id,))
+
+    def update(self, p):
+        sql = "update productos set nombre=?, idcategoria=?, importe=?, existencias=? where id=?"
+        self.__ejecutar(sql, p.getTupla2())
 
     def read(self, id):
         cur = None
