@@ -8,9 +8,19 @@ path = "../practicas/avanzado2/BBDD/empresa3.db"
 
 class Categoria:
 
+    __num_instancias = 0
+
     def __init__(self,id=0,nombre=""):
         self.id = id
         self.nombre = nombre
+        Categoria.__num_instancias+=1
+
+    @staticmethod
+    def getNumInstancias():
+        return Categoria.__num_instancias
+
+    def __del__(self):
+        Categoria.__num_instancias-=1
 
     def __str__(self):
         return str(self.id) + " " + self.nombre
@@ -23,6 +33,9 @@ class Categoria:
 
     def __eq__(self,o):
         return self.id==o.id and self.nombre==o.nombre
+
+    def print(self):
+        print(self.id, self.nombre)
 
     """
     def __del__(self):
@@ -46,7 +59,7 @@ class Producto:
 
     def getTupla(self):
         return (self.id,self.nombre,self.cat.id,self.precio,self.exis)
-        
+
     def getTupla2(self):
         return (self.nombre,self.cat.id,self.precio,self.exis,self.id)
     
@@ -135,6 +148,26 @@ class BaseDatos:
             self.con.close()
             print('Base de datos cerrada!')
 
+class Almacen:
+
+    def __init__(self, productos):
+        self.productos=productos
+
+    def __len__(self):
+        return len(self.productos)
+
+def testAlmacen():
+    try:
+        bd = BaseDatos(path)       
+        L = bd.select('bebidas')
+        almacen = Almacen(L)
+        print(f'Almacen con {len(almacen)} productos')
+
+        for i in almacen:
+            print(i)
+            
+    except Exception as e:
+        print(e.__class__.__name__, e) 
 
 def testBaseDeDatos():
     try:
@@ -166,8 +199,19 @@ def testCategoria():
     print(cat.__dict__)
     print([obj.__dict__ for obj in L])
 
+def testCategoriaStatic():
+    print('NumCat:',Categoria.getNumInstancias())
+    c1 = Categoria(1,'a')
+    c2 = Categoria(2,'b')
+    print('NumCat:',Categoria.getNumInstancias())
+    print('NumCat:',c1.getNumInstancias())
+    del(c1) # Llama al método __del__
+    print('NumCat:',Categoria.getNumInstancias())
+    c2.print()
+    Categoria.print(c2)
+
 if __name__ == '__main__':
-    testBaseDeDatos()
+    testAlmacen()
     
 
 
