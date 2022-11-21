@@ -1,0 +1,14 @@
+str()   __str__()
+repr()  __repr__()
+len() __len__()
+del() __del__()
+hash() __hash__()
+()     __call__()
+
+<	__lt__()
+>	__gt__()
+==	__eq__()
+
+
++	__add__()
+-	__sub__()
