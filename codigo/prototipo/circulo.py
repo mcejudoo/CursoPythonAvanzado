@@ -1,5 +1,6 @@
 from figura import Figura
 from math import pi
+import copy
 
 class Circulo(Figura):
 
@@ -13,6 +14,9 @@ class Circulo(Figura):
     def __str__(self):
         return self.__class__.__name__ + " " +\
               super().__str__() + " R:" + str(self.radio) + " " + str(self.calcularArea())
+
+    def clone(self):
+        return copy.deepcopy(self)
 
 
 if __name__ == '__main__':

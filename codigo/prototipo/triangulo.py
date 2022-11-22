@@ -14,3 +14,12 @@ class Triangulo(Figura):
         return self.__class__.__name__ + " " +\
               super().__str__() + " base: " + str(self.base) + " altura: " + str(self.altura) + \
                 " " + str(self.calcularArea())
+
+    def clone(self):
+        # Extraer la clase del objeto (self) y expandimos el diccionario de propiedades:
+        return self.__class__(**self.__dict__)
+
+if __name__ == '__main__':
+    t = Triangulo()        
+    t2 = t.clone()
+    print(t2)

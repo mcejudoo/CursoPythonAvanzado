@@ -5,7 +5,13 @@ Clase Abstracta que representa una figura
 import abc
 from abc import ABC
 
-class Figura(ABC):
+class Prototype(ABC):
+
+    @abc.abstractmethod
+    def clone(self):
+        pass
+
+class Figura(Prototype, ABC):
 
     def __init__(self, color='black', etiqueta="label"):
         self.color = color

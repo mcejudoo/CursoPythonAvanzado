@@ -14,5 +14,14 @@ class Rectangulo(Figura):
         return self.__class__.__name__ + " " +\
               super().__str__() + " ancho: " + str(self.ancho) + " alto: " + str(self.alto) + \
                 " " + str(self.calcularArea())
+
+    def clone(self):        
+        return Rectangulo(**self.__dict__)
+
+
+if __name__ == '__main__':
+    r = Rectangulo()
+    r2 = r.clone()        
+    print(r2)
 		
 	
