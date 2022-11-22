@@ -2,6 +2,7 @@
 Abstract Factory: Clases de tipo factoria
 """
 import abc
+from productos import *
 
 class Factoria(abc.ABC):
     """
@@ -9,27 +10,27 @@ class Factoria(abc.ABC):
     """
 
     @abc.abstractmethod
-    def createSmartPhone():
+    def createSmartPhone(self):
         pass
 
     @abc.abstractmethod
-    def createTablet():
+    def createTablet(self):
         pass
 
 
 class FactoriaSamsung(Factoria):
     
-    def createSmartPhone():
-        pass
+    def createSmartPhone(self):
+        return S20()
 
-    def createTablet():
-        pass
+    def createTablet(self):
+        return GalaxyS20()
 
 
 class FactoriaApple(Factoria):
 
-    def createSmartPhone():
-        pass
+    def createSmartPhone(self):
+        return IPhone()
 
-    def createTablet():
-        pass
+    def createTablet(self):
+        return IPad()
