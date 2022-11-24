@@ -69,7 +69,21 @@ class ExportarBD:
         return L
 
     def getProductosJSON(self, fichero):
-        pass
+        """
+        Cargar el fichero JSON: productos.json (json.load) y devolver una lista con los nombres
+        de los productos"""
+        f = None
+        L = []
+        try:
+            f = open(fichero, "r")
+            d = json.load(f)
+            for dicc in d:
+               L.append(dicc['nombre'])
+            return L
+        except Exception as e:
+            print(e)
+        finally:
+            if f: f.close()
 
     def productosToJson(self, L, fichero=None):
         """
@@ -116,9 +130,15 @@ def testGetProductosJson():
     cad_json = obj.productosToJson(L)
     print(cad_json)
 
+def testGetNombreProductosJson():
+    obj = ExportarBD()    
+    L = obj.getProductosJSON("productos.json")
+    print(L)
+
 if __name__ == '__main__':
     #testExportarXML()
     #testGetProductosXMLDom()
     #testGetProductosXMLSax()
-    testGetProductosJson()
+    #testGetProductosJson()
+    testGetNombreProductosJson()
 
