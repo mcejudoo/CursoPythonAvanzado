@@ -16,6 +16,11 @@ class Categoria:
         Categoria.__num_instancias+=1
 
     @staticmethod
+    def create(d):
+        """Crear la categoria a partir de un dict"""
+        return Categoria(d['id'],d['nombre'])
+
+    @staticmethod
     def getNumInstancias():
         return Categoria.__num_instancias
 
@@ -44,12 +49,22 @@ class Categoria:
 
 class Producto:
     
-    def __init__(self,id=0,nombre="",cat=None, precio=0.0, exis=0):
+    def __init__(self,id=0,nombre="",cat=Categoria(), precio=0.0, exis=0):
         self.id = id
         self.nombre = nombre
         self.cat = cat
         self.precio = precio
         self.exis = exis
+
+    @staticmethod
+    def create(d):
+        cat = Categoria.create(d['cat'])
+        return Producto(d['id'],d['nombre'],cat,d['precio'],d['exis'])
+
+    def to_json(self):
+        d = self.__dict__
+        d['cat'] = self.cat.__dict__
+        return d
 
     def __str__(self):
         return str(self.id)+" "+self.nombre+" "+str(self.cat)+" "+str(self.precio)+" "+str(self.exis)
@@ -73,7 +88,7 @@ class BaseDatos:
             raise ValueError("No se encuentra el fichero: "+path)
         else:
             self.con = dbapi.connect(path)
-            print('Base de datos abierta!')
+            #print('Base de datos abierta!')
 
     def __getProducto(self, t):
         tcat = t[2:4]
@@ -105,14 +120,18 @@ class BaseDatos:
     def __ejecutar(self, sql, t):
         cur = None
         try:
+            cur = self.con.cursor()
             cur.execute(sql,t)
+            self.con.commit()
+
         except Exception as e:
+            self.con.rollback()
             raise e
         finally:
             if cur: cur.close()
 
     def create(self, p):
-        sql = "insert into productos(id, nombre, idcategoria, importe, existencias) values(?,?,?,?,?)"
+        sql = "insert into productos(id, nombre, idcategoria, precio, existencias) values(?,?,?,?,?)"
         self.__ejecutar(sql, p.getTupla())
 
     def delete(self, id):
@@ -120,7 +139,7 @@ class BaseDatos:
         self.__ejecutar(sql, (id,))
 
     def update(self, p):
-        sql = "update productos set nombre=?, idcategoria=?, importe=?, existencias=? where id=?"
+        sql = "update productos set nombre=?, idcategoria=?, precio=?, existencias=? where id=?"
         self.__ejecutar(sql, p.getTupla2())
 
     def read(self, id):
@@ -146,7 +165,7 @@ class BaseDatos:
     def __del__(self):
         if hasattr(self, "con"):
             self.con.close()
-            print('Base de datos cerrada!')
+            #print('Base de datos cerrada!')
 
 class Almacen:
 
@@ -191,7 +210,6 @@ def testAlmacen():
         if almacen:
             print('El almacen tiene productos')
         almacen()
-
             
     except Exception as e:
         print(e.__class__.__name__, e) 
@@ -237,8 +255,12 @@ def testCategoriaStatic():
     c2.print()
     Categoria.print(c2)
 
+def testDelete():
+    bd = BaseDatos(path)
+    bd.delete(3)
+
 if __name__ == '__main__':
-    testAlmacen()
+    testDelete()
     
 
 
