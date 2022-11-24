@@ -5,8 +5,11 @@ Parsear el fichero generado con XML / JSON y pruebas con XPath (XML)
 
 from base_datos import BaseDatos, path
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree
+from xml.etree.ElementTree import iterparse
 
 class ExportarBD:
+
+    eventos = ['start','end']
 
     def productosToXML(self, L, fichero=None):
         """
@@ -45,7 +48,7 @@ class ExportarBD:
         except Exception as e:
             print(e)  
 
-    def getProductosXML(self, fichero):
+    def getProductosXMLDom(self, fichero):
         L = []
         with open(fichero, 'rt'):
             ET = ElementTree()
@@ -55,6 +58,13 @@ class ExportarBD:
             for nodo in tree.iter():
                 if nodo.tag == 'nombre':
                     L.append(nodo.text)
+        return L
+
+    def getProductosXMLSax(self, fichero):
+        L = []
+        for (evento, nodo) in iterparse(fichero, ExportarBD.eventos):
+            if evento == 'start' and nodo.tag == 'nombre':
+                L.append(nodo.text)
         return L
 
     def productosToJson(self, L, fichero=None):
@@ -69,12 +79,18 @@ def testExportarXML():
     obj = ExportarBD()
     obj.productosToXML(L, "productos.xml")
 
-def testGetProductosXML():
+def testGetProductosXMLDom():
     obj = ExportarBD()
-    L = obj.getProductosXML('productos.xml')
+    L = obj.getProductosXMLDom('productos.xml')
+    print(L)
+
+def testGetProductosXMLSax():
+    obj = ExportarBD()
+    L = obj.getProductosXMLSax('productos.xml')
     print(L)
 
 if __name__ == '__main__':
     #testExportarXML()
-    testGetProductosXML()
+    #testGetProductosXMLDom()
+    testGetProductosXMLSax()
 
