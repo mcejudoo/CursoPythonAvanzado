@@ -4,7 +4,7 @@ Servidor REST para implementar un API REST: con las operaciones CRUD
 
 from flask import Flask, make_response, jsonify
 from flask_restful import Resource, Api, abort, reqparse
-from base_datos import BaseDatos, path, Producto, Categoria
+from base_datos import BaseDatos, path, Producto, Categoria, Empleado
 
 app = Flask(__name__)
 api = Api(app)
@@ -20,6 +20,11 @@ parser.add_argument("nombre", type=str)
 parser.add_argument("cat", type=dict)
 parser.add_argument("precio", type=float)
 parser.add_argument("exis", type=int)
+
+parser_emp = reqparse.RequestParser()
+parser_emp.add_argument("id", type=int)
+parser_emp.add_argument("nombre", type=str)
+parser_emp.add_argument("cargo", type=str)
 
 class ProductoRest(Resource):
 
@@ -110,6 +115,21 @@ class ProductosCategoriasList(Resource):
             return {"error":str(e)}
 
 
+class EmpleadoRest(Resource):
+
+    def post(self):
+        """Crea un nuevo empleado en la base de datos"""
+        try:
+            args = parser_emp.parse_args()
+            empleado = Empleado.create(args)
+            bd = BaseDatos(path)
+            n = bd.createEmpleado(empleado)
+            return {"create_empleado":n}
+
+        except Exception as e:
+            return {"error":str(e)}
+
+
 # Mapeo de clases y recursos:
 # GET: http://localhost:5000/productos/<id>
 # DELETE: http://localhost:5000/productos/<id>
@@ -121,6 +141,7 @@ class ProductosCategoriasList(Resource):
 api.add_resource(ProductoRest, "/productos/<id>")
 api.add_resource(ProductosList, "/productos","/productos/")
 api.add_resource(ProductosCategoriasList, "/productos/categoria/<cat>")
+api.add_resource(EmpleadoRest, "/empleados", "/empleados/")
 
 if __name__ == "__main__":
     app.run(debug=True)
