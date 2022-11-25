@@ -6,6 +6,29 @@ from os.path import isfile
 
 path = "../practicas/avanzado2/BBDD/empresa3.db"
 
+class Empleado:
+
+    def __init__(self, id=0, nombre='', cargo=''):
+        self.id=id
+        self.nombre=nombre
+        self.cargo=cargo
+
+    def to_json(self):
+        return self.__dict__
+
+    def getTupla(self):
+        return (self.id, self.nombre, self.cargo)
+
+    @staticmethod
+    def create(d):
+        return Empleado(d['id'], d['nombre'], d['cargo'])
+
+    def __str__(self):
+        return str(self.id)+" "+self.nombre+" "+self.cargo
+
+    def __repr__(self):
+        return str(self)
+
 class Categoria:
 
     __num_instancias = 0
@@ -122,7 +145,9 @@ class BaseDatos:
         try:
             cur = self.con.cursor()
             cur.execute(sql,t)
+            n = cur.rowcount
             self.con.commit()
+            return n
 
         except Exception as e:
             self.con.rollback()
@@ -132,15 +157,39 @@ class BaseDatos:
 
     def create(self, p):
         sql = "insert into productos(id, nombre, idcategoria, precio, existencias) values(?,?,?,?,?)"
-        self.__ejecutar(sql, p.getTupla())
+        return self.__ejecutar(sql, p.getTupla())
 
+    def createEmpleado(self, e):
+        sql = "insert into empleados(id,nombre,cargo) values(?,?,?)"
+        return self.__ejecutar(sql, e.getTupla())
+        
     def delete(self, id):
         sql = "delete from productos where id=?"
-        self.__ejecutar(sql, (id,))
+        return self.__ejecutar(sql, (id,))
 
     def update(self, p):
         sql = "update productos set nombre=?, idcategoria=?, precio=?, existencias=? where id=?"
-        self.__ejecutar(sql, p.getTupla2())
+        return self.__ejecutar(sql, p.getTupla2())
+
+    def readCategoria(self, nombre):
+        """Recupera una categoria de la base de datos con el nombre"""
+        cur = None
+        try:
+            cur = self.con.cursor()
+            sql = "select id,nombre from categorias where nombre = ?"
+            cur.execute(sql, (nombre,))
+            t = cur.fetchone()
+            if t == None:
+                raise ValueError('No se encuentra la categoria: '+nombre)
+            cat = Categoria(*t)
+            return cat
+
+        except Exception as e:
+            raise e
+
+        finally:
+            if cur: cur.close()
+
 
     def read(self, id):
         cur = None
@@ -153,7 +202,7 @@ class BaseDatos:
             cur.execute(sql, (id,))
             t = cur.fetchone()
             if t == None:
-                raise ValueError('No se encuentra el producto: ',str(id))
+                raise ValueError('No se encuentra el producto: '+str(id))
             else:
                 return self.__getProducto(t)
         except Exception as e:

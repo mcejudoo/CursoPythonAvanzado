@@ -40,10 +40,14 @@ class ProductoRest(Resource):
         """
         try:
             bd = BaseDatos(path)
-            producto = bd.read(id)
-            d = {"Producto eliminado":producto.nombre}
-            bd.delete(id)
-            #return make_response(jsonify(d),200)        
+            producto = bd.read(id)           
+            n = bd.delete(id)
+            if n == 1:
+                # Se ha podido borrar
+                d = {"Producto eliminado":producto.nombre}
+            else:
+                d = {"Producto no eliminado":id}
+
             return d
         except Exception as e:
             abort(404, message=str(e))
@@ -64,8 +68,8 @@ class ProductosList(Resource):
             args = parser.parse_args()
             producto = Producto.create(args)
             bd = BaseDatos(path)
-            bd.create(producto)
-            return {"create":1}
+            n = bd.create(producto)
+            return {"create":n}
 
         except Exception as e:
             return {"error":str(e)}
@@ -77,8 +81,8 @@ class ProductosList(Resource):
             bd = BaseDatos(path)
             # Comprobar si existe el producto en la base de datos
             bd.read(producto.id)
-            bd.update(producto)
-            return {"update":1}
+            n = bd.update(producto)
+            return {"update":n}
 
         except ValueError as e:
             abort(404, message=str(e))
@@ -92,10 +96,18 @@ class ProductosCategoriasList(Resource):
         """
         Recuperar todos los productos de la base de datos
         """
-        bd = BaseDatos(path)
-        productos = bd.select(cat)
-        L = [p.to_json() for p in productos]
-        return make_response(jsonify(L),200)
+        try:
+            bd = BaseDatos(path)
+            categoria = bd.readCategoria(cat)
+            productos = bd.select(cat)
+            L = [p.to_json() for p in productos]
+            return make_response(jsonify(L),200)
+
+        except ValueError as e:
+            abort(404, message=str(e))
+
+        except Exception as e:
+            return {"error":str(e)}
 
 
 # Mapeo de clases y recursos:
@@ -105,6 +117,7 @@ class ProductosCategoriasList(Resource):
 # POST: http://localhost:5000/productos
 # PUT: http://localhost:5000/productos
 # GET: http://localhost:5000/productos/categoria/<nombre_categoria>
+# POST: http://localhost:5000/empleados
 api.add_resource(ProductoRest, "/productos/<id>")
 api.add_resource(ProductosList, "/productos","/productos/")
 api.add_resource(ProductosCategoriasList, "/productos/categoria/<cat>")
