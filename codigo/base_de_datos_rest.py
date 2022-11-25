@@ -70,6 +70,21 @@ class ProductosList(Resource):
         except Exception as e:
             return {"error":str(e)}
 
+    def put(self):
+        try:
+            args = parser.parse_args()
+            producto = Producto.create(args)
+            bd = BaseDatos(path)
+            # Comprobar si existe el producto en la base de datos
+            bd.read(producto.id)
+            bd.update(producto)
+            return {"update":1}
+
+        except ValueError as e:
+            abort(404, message=str(e))
+
+        except Exception as e:
+            return {"error":str(e)}
     
 class ProductosCategoriasList(Resource):
 
@@ -88,6 +103,7 @@ class ProductosCategoriasList(Resource):
 # DELETE: http://localhost:5000/productos/<id>
 # GET: http://localhost:5000/productos
 # POST: http://localhost:5000/productos
+# PUT: http://localhost:5000/productos
 # GET: http://localhost:5000/productos/categoria/<nombre_categoria>
 api.add_resource(ProductoRest, "/productos/<id>")
 api.add_resource(ProductosList, "/productos","/productos/")
