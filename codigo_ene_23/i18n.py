@@ -1,3 +1,4 @@
+import os
 
 class Idioma:
 	
@@ -33,6 +34,8 @@ class Idioma:
 			
 		finally:
 			if f != None: f.close()
+
+	
 
 	def getString(self,key):
 		if key in self.palabras:
@@ -89,12 +92,21 @@ class Singleton:
 		finally:
 			if f != None: f.close()			
 
+	@staticmethod
+	def getIdiomas():
+		idiomas = []
+		for f in os.listdir('idiomas'):
+			if '.txt' in f:
+				i, _,_ = f.partition('.')
+				idiomas.append(i)
 
+		return idiomas
 
 #########################################################################################################################################################
 
 if __name__=='__main__':
 	
+	print('idiomas: ', Singleton.getIdiomas())
 	print(Singleton.getInstance()['facebook'])
 	print(Singleton.getInstance('es')['instagram'])
 	print(Singleton.getInstance('en')['inicio'])

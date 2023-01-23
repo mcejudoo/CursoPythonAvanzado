@@ -19,7 +19,7 @@ class Factoria1:
             self.prototipos[key] = val
 
     def print(self):
-        print('Prototipos')
+        print('Prototipos:')
         for k, v in self.prototipos.items():
             print(k,v)
 
@@ -33,7 +33,27 @@ class Factoria2:
     """
     Crear los prototipos bajo demanda
     """
-    pass
+
+    def __init__(self, clasePrototipo):
+        """
+        Crear todos los prototipos
+        """
+        self.prototipos = dict()
+        for c in clasePrototipo.__subclasses__():
+            key = c.__name__.lower() # Nombre de la clase en minusculas            
+            self.prototipos[key] = None
+
+    def getPrototipo(self, nombreFigura):
+        key = nombreFigura.lower()
+        if not self.prototipos[key]:
+            self.prototipos[key] = eval("{}()".format(nombreFigura.capitalize()))
+        
+        return copy.copy(self.prototipos[key])        
+    
+    def print(self):
+        print('Prototipos 2:')
+        for k, v in self.prototipos.items():
+            print(k,v)
 
 class Prototipo(abc.ABC):
 	
@@ -88,7 +108,7 @@ class Triangulo(Prototipo):
 		return copy.copy(self)
 	
 if __name__ == '__main__':
-    fact1 = Factoria1(Prototipo)
+    fact1 = Factoria2(Prototipo)
     fact1.print()
     t = fact1.getPrototipo('triangulo')
     t.color = 'red'

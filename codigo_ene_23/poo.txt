@@ -2,12 +2,12 @@ Poo python:
 Herencia Simple / Múltiple
 No admite sobrecarga de métodos en la misma clase
 
-Sobrecarga operadores aritméticos:
+Sobrecarga operadores aritméticos:nuevas instancias
 +	__add__()
 -	__sub__()
 ...
 
-Sobrecarga de op. relacionales:
+Sobrecarga de op. relacionales: bool
 <	__lt__()
 ==	__eq__()
 ...
