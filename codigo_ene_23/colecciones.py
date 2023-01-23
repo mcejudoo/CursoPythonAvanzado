@@ -17,7 +17,27 @@ aleatorio = [randint(0,n2-1) for _ in range(30)]
 print(aleatorio[:5]) # slicing: L[ini:fin-1:salto]
 
 # Generar los intervalos:
+salto = n2//n1
+tuplas = [(i,i+salto-1) for i in range(0,100, salto)]
+print(tuplas)
 
-
+d = dict()
 # Repartir los números aleatorios en cada intervalo:
+for t in tuplas:
+    d[t] = list() # Clave: tupla, valor: lista vacía
+print(d)
+
+for num in aleatorio:
+    for t, L in d.items():
+        ini, fin = t  # Expansión de tuplas
+        if ini <= num <= fin:
+            d[t].append(num)
+            break
+
+for t, L in d.items():
+    print(t)
+    print(L)
+    print()
+
+
 
