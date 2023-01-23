@@ -1,6 +1,32 @@
 import abc
 
 # Definir la factoría abstracta y otras dos: Apple y Samsung
+class AbstractFactory(abc.ABC):
+
+    @abc.abstractmethod
+    def createSmartPhone(self):
+        pass
+
+    @abc.abstractmethod
+    def createTablet(self):
+        pass
+
+class FactoryApple(AbstractFactory):
+
+    def createSmartPhone(self):
+        return IPhone('ios',5,64,'modelo 10')
+    
+    def createTablet(self):
+        return IPad('ios',10,128,'tablet 5')
+
+class FactorySamsung(AbstractFactory):
+
+    def createSmartPhone(self):
+        return GalaxyS7('android 8',5,64,'xxx 10')
+    
+    def createTablet(self):
+        return GalaxyA('ios',10,128,'xx 5')
+
 
 #productos
 class Dispositivo():
@@ -32,13 +58,19 @@ class GalaxyS7(SmartPhone):
         def __init__(self, so, ram, hd, name):
                 SmartPhone.__init__(self, so, ram, hd, name)
 
+        def call(self):
+            print('Llamar con GalaxyS7')
+
         def __str__(self):
                 return "GalaxyS7: " + SmartPhone.__str__(self)
 
-class Titan(SmartPhone):
+class IPhone(SmartPhone):
 
         def __init__(self, so, ram, hd, name):
                 SmartPhone.__init__(self, so, ram, hd, name)
+
+        def call(self):
+            print('Llamar con Titan')
 
         def __str__(self):
                 return "Titan: " + SmartPhone.__str__(self)
@@ -57,18 +89,25 @@ class Tablet(Dispositivo, abc.ABC):
         def __str__(self):
                 return "Tablet: " + Dispositivo.__str__(self)
 
-class Guru(Tablet):
+class GalaxyA(Tablet):
         
         def __init__(self, so, ram, hd, name):
                 Tablet.__init__(self, so, ram, hd, name)
+
+        def internet(self):
+            print('internet con Guru')
 
         def __str__(self):
                 return "Guru: " + Tablet.__str__(self)
 
-class Genie(Tablet):
+class IPad(Tablet):
         
         def __init__(self, so, ram, hd, name):
                 Tablet.__init__(self, so, ram, hd, name)
+
+        def internet(self):
+            print('internet con Genie')
+
 
         def __str__(self):
                 return "Genie: " + Tablet.__str__(self)
