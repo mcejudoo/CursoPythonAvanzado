@@ -1,0 +1,49 @@
+Poo python:
+Herencia Simple / Múltiple
+No admite sobrecarga de métodos en la misma clase
+
+Sobrecarga operadores aritméticos:
++	__add__()
+-	__sub__()
+...
+
+Sobrecarga de op. relacionales:
+<	__lt__()
+==	__eq__()
+...
+
+Sobrecarga de Funciones especiales
+str()	__str__()
+len()	__len__()
+repr()	__repr__()
+del()	__del__()	
+
+En python el objeto en curso: self
+tipos de métodos.
+de instancia: 1º param: self
+de clase: 1º param: cls
+static: ni cls, ni self
+
+tipos de atributos:
+de instancia: definidos __init__() con self
+de clase: fuera de __init__() / metodo
+
+Relaciones entre las clases.
+- Herencia: conocimiento común entre las clases
+- Composición: Una clase que tiene att. que son obj de otras clases.
+	Un objeto se desglosa en parte.
+- Asociación: Dos obj independientes interáctuan en el T en un instante dado
+        objeto1.metodo(objeto2)
+
+	c = Coche()
+	s = Surtidor()
+	c.repostar(s)
+
+
+- Abstractas
+
+
+
+
+
+
