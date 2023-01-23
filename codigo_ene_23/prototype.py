@@ -4,6 +4,33 @@ Editor de figuras en 2D
 """
 import abc, copy
 
+class Factoria1:
+    """
+    Crear los prototipos al principio
+    """
+    
+    def __init__(self):
+        """
+        Crear los prototipos
+        """
+        pass
+
+
+    def getPrototipo(self, nombreFigura):
+        """
+        Devuelve un clon del prototipo elegido
+        """
+        pass
+
+
+class Factoria2:
+    """
+    Crear los prototipos bajo demanda
+    """
+    pass
+
+
+
 class Prototipo(abc.ABC):
 	
 	def __init__(self, etiqueta='', color='black'):
