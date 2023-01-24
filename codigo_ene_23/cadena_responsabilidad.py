@@ -25,9 +25,6 @@ class Procesador(abc.ABC):
 
 class ProcesadorEmail(Procesador):
 
-    def __init__(self,sucesor=None):
-        Procesador.__init__(self, sucesor)
-
     def procesar(self, peticion):
         if peticion.tipo == 'email':
             print('Enviar por correo: ', peticion.contenido)
@@ -43,9 +40,6 @@ class ProcesadorEmail(Procesador):
 
 class ProcesadorSMS(Procesador):
 
-    def __init__(self,sucesor=None):
-        Procesador.__init__(self, sucesor)
-
     def procesar(self, peticion):
         if peticion.tipo == 'sms':
             print('Enviar por SMS: ', peticion.contenido)
@@ -60,9 +54,6 @@ class ProcesadorSMS(Procesador):
 
 class ProcesadorWhatsApp(Procesador):
 
-    def __init__(self,sucesor=None):
-        Procesador.__init__(self, sucesor)
-
     def procesar(self, peticion):
         if peticion.tipo == 'whatsApp':
             print('Enviar por whatsApp: ', peticion.contenido)
@@ -74,3 +65,13 @@ class ProcesadorWhatsApp(Procesador):
 
         else:
             print('Fin de cadena ...')
+
+if __name__ == '__main__':
+    peticion = Peticion('email','Contenido del mensaje')
+    obj1 = ProcesadorEmail()
+    obj2 = ProcesadorSMS(obj1)
+    obj3 = ProcesadorWhatsApp(obj2)
+
+    obj3.procesar(peticion)
+
+

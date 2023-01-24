@@ -36,9 +36,9 @@ if __name__=='__main__':
     aleatorio = Aleatorio(15,100)
 
     mensajes.start()
-    aleatorio.start()
+    aleatorio.start() 
 
-    mensajes.join()
+    mensajes.join()   
     aleatorio.join()
 
     print('Main termina')

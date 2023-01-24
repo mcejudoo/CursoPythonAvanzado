@@ -120,12 +120,9 @@ class BuilderHTML(Builder):
             if f: f.close()     
             if fout: fout.close()       
 
-
-
-
 if __name__ == '__main__':
-    #builder = BuilderHTML()
-    builder = BuilderXML()
+    builder = BuilderHTML()
+    #builder = BuilderXML()
     director = Director(builder)
-    director.convertirFichero("ficheros_templates/Empleados.txt")
+    director.convertirFichero("ficheros_templates/Pedidos.txt")
 
