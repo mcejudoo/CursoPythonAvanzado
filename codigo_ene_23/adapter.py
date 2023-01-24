@@ -48,12 +48,37 @@ class Vector2D(abc.ABC):
 # Adaptador 1: solución por composición: wrapper
 class VectorPlano1(Vector2D):
 
-	def __init__(self):
+	def __init__(self, x=0, y=0):
 		# el att de tipo Vector3D
-		self.vector3D=0
+		self.__vector3D=Vector3D(x,y,0)
+
+	def getAbcisa(self): 
+		return self.__vector3D.getX()
+		
+	def getOrdenada(self):
+		return self.__vector3D.getY()
+			
+	def prod(self, v):
+		aux3D = Vector3D(v.getAbcisa(), v.getOrdenada(), 0)
+		return self.__vector3D.productoEscalar(aux3D)
+			
+	def magnitud(self):
+		# La norma del vector
+		return self.__vector3D.norma()
+
+	def __str__(self):
+		return str(self.getAbcisa())+", "+str(self.getOrdenada())
 
 # Adaptador 2: solución por herencia múltiple
 class VectorPlano2(Vector2D, Vector3D):
 
 	def __init__(self) -> None:
 		Vector3D.__init__(self)
+
+if __name__ == '__main__':
+	v1 = VectorPlano1(2,6)		
+	v2 = VectorPlano1(5,6)
+
+	print(v1)
+	print(v2)
+	print(v1.prod(v2))
