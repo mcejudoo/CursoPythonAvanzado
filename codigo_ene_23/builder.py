@@ -59,17 +59,23 @@ class BuilderXML(Builder):
     def createDetalle(self, L):
         linea = ""
         for pos, i in enumerate(L):
-            linea += f"<{self.cabs[pos]}>"+str(i)+f"</{self.cabs[pos]}>;"
-        return linea
+            linea += f"<{self.cabs[pos]}>"+str(i)+f"</{self.cabs[pos]}>"
+        return linea+";"
 
     def createFichero(self, texto, path):
          # Cargar la plantilla       
         fout=None 
         path2 = path+'.xml'  
-        etiqueta = path.split('/')[-1]    
+        etiqueta = path.split('/')[-1].lower()
+        etiquetaReg = etiqueta[:-1].lower()
         try:
             fout = open(path2, 'w')
-            xml = f"<{etiqueta.lower()}>{texto}</{etiqueta.lower()}>"
+            regs = texto.split(';')
+            xml_final = ""
+            for r in regs:
+                xml_final += f"<{etiquetaReg}>{r}</{etiquetaReg}>"
+
+            xml = f"<{etiqueta}>{xml_final}</{etiqueta}>"
             xml = "<?xml version='1.0' encoding='UTF-8'?>"+xml              
             fout.write(xml)
 
