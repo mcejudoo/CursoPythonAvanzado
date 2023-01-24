@@ -36,16 +36,48 @@ class Director:
 class Builder(abc.ABC):
 
     @abc.abstractmethod
-    def createCab(self, texto):
+    def createCab(self, L):
         pass
 
     @abc.abstractmethod
-    def createDetalle(self, texto):
+    def createDetalle(self, L):
         pass
 
     @abc.abstractmethod
     def createFichero(self, texto, path):
         pass
+
+class BuilderXML(Builder):
+
+    def __init__(self):
+        self.cabs = None
+        
+    def createCab(self, L):
+        self.cabs = L
+        return ""
+
+    def createDetalle(self, L):
+        linea = ""
+        for pos, i in enumerate(L):
+            linea += f"<{self.cabs[pos]}>"+str(i)+f"</{self.cabs[pos]}>;"
+        return linea
+
+    def createFichero(self, texto, path):
+         # Cargar la plantilla       
+        fout=None 
+        path2 = path+'.xml'  
+        etiqueta = path.split('/')[-1]    
+        try:
+            fout = open(path2, 'w')
+            xml = f"<{etiqueta.lower()}>{texto}</{etiqueta.lower()}>"
+            xml = "<?xml version='1.0' encoding='UTF-8'?>"+xml              
+            fout.write(xml)
+
+        except Exception as e:
+            print(e)
+
+        finally:           
+            if fout: fout.close()       
 
 class BuilderHTML(Builder):
 
@@ -86,6 +118,8 @@ class BuilderHTML(Builder):
 
 
 if __name__ == '__main__':
-    builder = BuilderHTML()
+    #builder = BuilderHTML()
+    builder = BuilderXML()
     director = Director(builder)
     director.convertirFichero("ficheros_templates/Empleados.txt")
+
