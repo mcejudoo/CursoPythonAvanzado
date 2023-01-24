@@ -72,12 +72,30 @@ class VectorPlano1(Vector2D):
 # Adaptador 2: solución por herencia múltiple
 class VectorPlano2(Vector2D, Vector3D):
 
-	def __init__(self) -> None:
-		Vector3D.__init__(self)
+	def __init__(self, x=0, y=0):
+		Vector3D.__init__(self, x, y, 0)
+
+	def getAbcisa(self): 
+		return self.getX()
+		
+	def getOrdenada(self):
+		return self.getY()
+
+	def prod(self, v):
+		aux3D = Vector3D(v.getAbcisa(), v.getOrdenada(), 0)
+		return Vector3D.productoEscalar(self, aux3D)
+			
+	def magnitud(self):
+		# La norma del vector
+		return Vector3D.norma(self)
+
+	def __str__(self):
+		return str(Vector3D.getX(self))+", "+str(Vector3D.getY(self))
+
 
 if __name__ == '__main__':
-	v1 = VectorPlano1(2,6)		
-	v2 = VectorPlano1(5,6)
+	v1 = VectorPlano2(2,6)		
+	v2 = VectorPlano2(5,6)
 
 	print(v1)
 	print(v2)
