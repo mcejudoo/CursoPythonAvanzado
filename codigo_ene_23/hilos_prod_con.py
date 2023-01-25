@@ -17,7 +17,7 @@ class Buffer:
         self.semEmpty = semEmpty
         self.indC = 0
         self.indP = 0
-        self.buffer = list()
+        self.buffer = [-1] * BUFFER_SIZE
 
     def print(self):
         print(self.buffer)
@@ -30,7 +30,19 @@ class Productor(Thread):
         self.buffer = buffer
 
     def run(self):
-        pass
+        for i in range(NUM_MUESTRAS):
+            item = randint(0,100)
+            # Necesita un hueco para colocar el item:
+            self.buffer.semEmpty.acquire()
+
+            with self.buffer.mutex:
+                self.buffer.buffer[self.buffer.indP]=item
+                self.buffer.indP = (self.buffer.indP+1) % BUFFER_SIZE
+                print('P:',item, self.buffer.buffer)
+
+            # Avisa al consumidor de que hay un nuevo item
+            self.buffer.semItems.release()
+            sleep(randint(0,2))
 
 class Consumidor(Thread):
     
@@ -39,7 +51,20 @@ class Consumidor(Thread):
         self.buffer = buffer
 
     def run(self):
-        pass
+        for i in range(NUM_MUESTRAS):
+            
+            # Necesita un item para procesar:
+            self.buffer.semItems.acquire()
+
+            with self.buffer.mutex:
+                item = self.buffer.buffer[self.buffer.indC]
+                self.buffer.buffer[self.buffer.indC] = -1
+                self.buffer.indC = (self.buffer.indC+1) % BUFFER_SIZE
+                print('C:',item, self.buffer.buffer)
+
+            # Avisa al consumidor de que hay un nuevo item
+            self.buffer.semItems.release()
+            sleep(randint(1,3))
 
 if __name__ == '__main__':
     mutex = Lock()
