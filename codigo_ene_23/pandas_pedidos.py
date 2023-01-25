@@ -3,6 +3,9 @@ Prácticas con pandas
 """
 
 import pandas as pd
+import sys
+import sqlite3 as dbapi
+from os.path import isfile
 
 path='ficheros_templates/Pedidos.txt'
 
@@ -21,7 +24,6 @@ def exportarPedidos():
         dtAux.to_csv(path_destino, sep=';', index=False, decimal=',')
         print('Generando fichero:', path_destino)
 
-
 def nuevasColsYFormatos():
     """
     Crear nuevas cols y exportar a formatos: xlsx, json, html
@@ -36,11 +38,21 @@ def nuevasColsYFormatos():
     dt['total'] = dt.importe + dt.iva
     dt = dt[['idpedido','cliente','pais','importe','porc_iva','iva','total']]
     dt.to_excel('pedidos.xlsx', index=False)
+    dt.to_json(sys.stdout, indent=4, orient='records')
+    dt.to_html('pedidos.html', index=False)
 
-    print(dt.head())
-
-
+def cargaSQL(path):
+    if not isfile(path):
+        raise ValueError(path+' no existe')
+    else:
+        con = dbapi.connect(path)
+        sql = """select p.id as idproducto, p.nombre as producto, c.nombre as categoria, p.precio, p.existencias from categorias c 
+        inner join productos p on c.id = p.idcategoria"""
+        dt = pd.read_sql(sql, con)
+        print(dt.head())
+        con.close()
 
 if __name__ == '__main__':
     #exportarPedidos()
-    nuevasColsYFormatos()
+    #nuevasColsYFormatos()
+    cargaSQL('bd/empresa3.db')
