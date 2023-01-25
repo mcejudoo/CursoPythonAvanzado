@@ -38,7 +38,7 @@ class Productor(Thread):
             with self.buffer.mutex:
                 self.buffer.buffer[self.buffer.indP]=item
                 self.buffer.indP = (self.buffer.indP+1) % BUFFER_SIZE
-                print('P:',item, self.buffer.buffer)
+                print(f'{i} - P:',item, self.buffer.buffer)
 
             # Avisa al consumidor de que hay un nuevo item
             self.buffer.semItems.release()
@@ -60,10 +60,10 @@ class Consumidor(Thread):
                 item = self.buffer.buffer[self.buffer.indC]
                 self.buffer.buffer[self.buffer.indC] = -1
                 self.buffer.indC = (self.buffer.indC+1) % BUFFER_SIZE
-                print('C:',item, self.buffer.buffer)
+                print(f'{i} - C:',item, self.buffer.buffer)
 
-            # Avisa al consumidor de que hay un nuevo item
-            self.buffer.semItems.release()
+            # Avisa al productor de que hay un nuevo hueco.
+            self.buffer.semEmpty.release()
             sleep(randint(1,3))
 
 if __name__ == '__main__':
