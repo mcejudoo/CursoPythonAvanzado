@@ -29,10 +29,21 @@ def filtroFicheros(ini, fin):
                 L.append(f)
     return L
 
-
 def sumaRangoAños(ini, fin):
+    primera=True
     años = filtroFicheros(ini, fin)
-    print(años)
+    for año in años:
+        path = carpeta+año
+        dt = cargarDT(path)
+        if primera:
+            dtTotal = dt
+            primera=False
+        else:
+            dtTotal = dtTotal.add(dt, fill_value=0)
+
+    dtTotal.sort_values("cuenta", ascending=False, inplace=True)
+    print(dtTotal.head(10))    
+
 
 if __name__ == '__main__':
     sumaRangoAños(1990, 2000)
