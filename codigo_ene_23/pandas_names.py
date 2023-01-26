@@ -45,6 +45,14 @@ def sumaRangoAños(ini, fin):
     print(dtTotal.head(10))    
 
 
+def concatenarRangoAños(ini, fin):
+    """Concatenar todos los dt de cada año y exportarlo a otro fichero"""
+    años = filtroFicheros(ini, fin)
+    L = [pd.read_csv(carpeta+año, header=None, names=['nombre','sexo','cuenta'])  for año in años]
+    dtTotal = pd.concat(L, ignore_index=True)
+    dtTotal.sort_values(by='nombre', inplace=True)
+    print(dtTotal.head(20))
+
 if __name__ == '__main__':
-    sumaRangoAños(1990, 2000)
+    concatenarRangoAños(1990, 1992)
 
