@@ -4,7 +4,7 @@ Exportar registros de la BD a json / xml
 
 import json
 from base_datos import BaseDatos, Producto, Categoria, path
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree, iterparse
 
 def testJSON():
     bd = BaseDatos(path)
@@ -80,6 +80,49 @@ def testXML():
         print(e)
 
 
+def cargarDOMXML():
+    L = []
+    fichero = 'productos.xml'
+    with open(fichero,'rt'):
+        ET = ElementTree()
+        # Representa el árbol del DOM cargado en memoria
+        tree = ET.parse(fichero)
+        # Seleccionar nodo raíz:
+        top = ET.getroot()
+        #print(tostring(top))
+        for nodo in tree.iter():
+            if nodo.tag == 'nombre':
+                print(nodo.text)
+
+        print('-----')
+        # Búsqueda con XPATH
+        print('Con XPath: ')
+        nodos = tree.findall(".//producto/nombre")
+        for nodo in nodos:
+            print(nodo.text)
+
+
+def cargarSAXXML():
+    eventos = ['start', 'end']
+    d = dict()
+    for evento, nodo in iterparse('productos.xml',eventos):
+        #print(evento, nodo)
+        if evento == 'start':
+            if nodo.tag == 'nombre':
+                clave = nodo.text
+
+            if nodo.tag == 'precio':
+                valor = float(nodo.text)
+                d[clave] = valor
+
+    print(d)
+
+            
+
+
+
 if __name__ == "__main__":
     #testJSON()
-    testXML()
+    #testXML()
+    #cargarDOMXML()
+    cargarSAXXML()
