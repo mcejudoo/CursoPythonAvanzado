@@ -8,6 +8,7 @@ class HelloWorld(Resource):
 	def get(self):
 		return{"hello": "world"}
 
+# Mapeo entre un recurso (la clase) y un petición
 api.add_resource(HelloWorld, '/')
 
 if __name__ == '__main__':
